@@ -1,5 +1,5 @@
 import cv2
-from os import system, listdir, path, mkdir
+from os import system, listdir, path, mkdir, getcwd
 from shutil import rmtree
 
 system("clear || cls")
@@ -20,26 +20,46 @@ while True:
 
 folder_new_addr: str = r"./{}".format(new_folder_name)
 
-# Get crop coordinates
-start_y_default: int = 1203
-start_x_default: int = 370
-end_y_default: int = 470
-end_x_default: int = 422
+# Coordination menu
+print("\nWhich coordinate selection do you prefer:\n\t1-Auto\n\t2-Manual\n\n")
+coordinateSelection: int = int(input("Select one: "))
 
-# In order: start_y, start_x, end_y, end_x
 coordinates = [
-    {"text": "Start Y axis: ", "value": start_y_default},
-    {"text": "Start X axis: ", "value": start_x_default},
-    {"text": "End Y axis: ", "value": end_y_default},
-    {"text": "End X axis: ", "value": end_x_default}
+    {"text": "Start X axis: ", "value": 0},
+    {"text": "Start Y axis: ", "value": 0},
+    {"text": "End X axis: ", "value": 0},
+    {"text": "End Y axis: ", "value": 0}
 ]
 
-print("\nEnter the coordinates in order to crop!\n")
-for i in range(len(coordinates)):
-    try:
-        coordinates[i]["value"] = int(input(coordinates[i]["text"]))
-    except:
-        continue
+if coordinateSelection == 1:
+    # Auto coordinating
+    sourceFolderAddr = path.join(getcwd(), folder_name_addr)
+
+    # Get the address of first image in images' source directory
+    firstImg = listdir(sourceFolderAddr)[0]
+
+    print("\nSelection Guidance:\n")
+    tempImg = cv2.imread(path.join(sourceFolderAddr, firstImg))
+    cv2.namedWindow(firstImg, flags=cv2.WINDOW_NORMAL)
+    cv2.resizeWindow(firstImg, 1920, 1080)
+    coors = cv2.selectROI(firstImg, tempImg)
+
+    for i, v in enumerate(coors):
+        coordinates[i]["value"] = v
+
+elif coordinateSelection == 2:
+    # Manual coordinating
+
+    print("\n")
+    for i in range(len(coordinates)):
+        try:
+            coordinates[i]["value"] = int(input(coordinates[i]["text"]))
+        except:
+            continue
+
+else:
+    print("\nEnter correct coordination option!\n")
+    exit(0)
 
 # Make saving directory
 if path.exists(folder_new_addr):
@@ -60,8 +80,8 @@ def load_all_images(folder: str):
         if img is not None:
             # Crop images
             img_cropped = img[
-                          coordinates[0]["value"]:coordinates[0]["value"] + coordinates[2]["value"],
-                          coordinates[1]["value"]:coordinates[1]["value"] + coordinates[3]["value"]
+                          coordinates[1]["value"]:coordinates[1]["value"] + coordinates[3]["value"],
+                          coordinates[0]["value"]:coordinates[0]["value"] + coordinates[2]["value"]
                           ]
             images.append(img_cropped)
 
