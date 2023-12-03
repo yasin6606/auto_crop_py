@@ -7,10 +7,11 @@ system("clear || cls")
 print("Hey!\n\nI am Yasin Gourkani\n\nFind me on GitHub: https://github.com/yasin6606\n\n")
 
 new_folder_name: str = input("What is the Session name (For E.X: session_6): ")
+extera_name: str = input("Enter extera name (If applicable): ")
 
 # Get source address
 while True:
-    folder_name_addr: str = input("\nEnter the Source Directory Address (For E.X. ./source): ")
+    folder_name_addr: str = input("\nEnter the Source Directory Address (For E.X. source): ")
 
     if path.exists(folder_name_addr) is False:
         print("\n! Entered source address not found")
@@ -19,6 +20,16 @@ while True:
     break
 
 folder_new_addr: str = r"./{}".format(new_folder_name)
+
+# Make saving directory
+if path.exists(folder_new_addr):
+    rm_dir = input("\nDo you want to remove same directory as you are entered? (y or n): ")
+
+    if rm_dir == 'y' or rm_dir == "yes" or rm_dir == "Yes":
+        rmtree(folder_new_addr)
+        mkdir(folder_new_addr)
+else:
+    mkdir(folder_new_addr)
 
 # Coordination menu
 print("\nWhich coordinate selection do you prefer:\n\t1-Auto\n\t2-Manual\n\n")
@@ -61,12 +72,6 @@ else:
     print("\nEnter correct coordination option!\n")
     exit(0)
 
-# Make saving directory
-if path.exists(folder_new_addr):
-    rmtree(folder_new_addr)
-
-mkdir(folder_new_addr)
-
 
 # Load source files
 def load_all_images(folder: str):
@@ -92,6 +97,6 @@ loaded = load_all_images(folder_name_addr)
 
 # Save new cropped images to new directory
 for i, name in enumerate(listdir(folder_name_addr)):
-    cv2.imwrite(path.join(folder_new_addr, new_folder_name + "_{}.png".format(i + 1)), loaded[i])
+    cv2.imwrite(path.join(folder_new_addr, new_folder_name + "_{}_{}.png".format(i + 1, extera_name)), loaded[i])
 
 print("\nThe result is saved in {}\n\nEnjoy!\n".format(folder_new_addr))
