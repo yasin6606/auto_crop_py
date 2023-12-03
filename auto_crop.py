@@ -1,4 +1,4 @@
-import cv2
+from cv2 import imread, imwrite, selectROI, namedWindow, resizeWindow, WINDOW_NORMAL
 from os import system, listdir, path, mkdir, getcwd
 from shutil import rmtree
 
@@ -50,10 +50,10 @@ if coordinateSelection == 1:
     firstImg = listdir(sourceFolderAddr)[0]
 
     print("\nSelection Guidance:\n")
-    tempImg = cv2.imread(path.join(sourceFolderAddr, firstImg))
-    cv2.namedWindow(firstImg, flags=cv2.WINDOW_NORMAL)
-    cv2.resizeWindow(firstImg, 1920, 1080)
-    coors = cv2.selectROI(firstImg, tempImg)
+    tempImg = imread(path.join(sourceFolderAddr, firstImg))
+    namedWindow(firstImg, flags=WINDOW_NORMAL)
+    resizeWindow(firstImg, 1920, 1080)
+    coors = selectROI(firstImg, tempImg)
 
     for i, v in enumerate(coors):
         coordinates[i]["value"] = v
@@ -80,7 +80,7 @@ def load_all_images(folder: str):
     for filename in listdir(folder):
 
         # Read source images
-        img = cv2.imread(path.join(folder, filename))
+        img = imread(path.join(folder, filename))
 
         if img is not None:
             # Crop images
@@ -97,6 +97,6 @@ loaded = load_all_images(folder_name_addr)
 
 # Save new cropped images to new directory
 for i, name in enumerate(listdir(folder_name_addr)):
-    cv2.imwrite(path.join(folder_new_addr, new_folder_name + "_{}_{}.png".format(i + 1, extera_name)), loaded[i])
+    imwrite(path.join(folder_new_addr, new_folder_name + "_{}_{}.png".format(i + 1, extera_name)), loaded[i])
 
 print("\nThe result is saved in {}\n\nEnjoy!\n".format(folder_new_addr))
