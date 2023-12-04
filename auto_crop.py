@@ -22,14 +22,20 @@ while True:
 folder_new_addr: str = r"./{}".format(new_folder_name)
 
 # Make saving directory
-if path.exists(folder_new_addr):
-    rm_dir = input("\nDo you want to remove same directory as you are entered? (y or n): ")
+while True:
+    if path.exists(folder_new_addr):
+        rm_dir = input("\nDo you want to remove same directory as you are entered? (y or n): ")
 
-    if rm_dir == 'y' or rm_dir == "yes" or rm_dir == "Yes":
-        rmtree(folder_new_addr)
+        if rm_dir == 'y' or rm_dir == "yes" or rm_dir == "Yes":
+            rmtree(folder_new_addr)
+            mkdir(folder_new_addr)
+
+            break
+        elif rm_dir == "n" or rm_dir == "no":
+            break
+    else:
         mkdir(folder_new_addr)
-else:
-    mkdir(folder_new_addr)
+        break
 
 # Coordination menu
 print("\nWhich coordinate selection do you prefer:\n\t1-Auto\n\t2-Manual\n\n")
